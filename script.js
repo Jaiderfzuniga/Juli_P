@@ -31,7 +31,7 @@ const cardTextElement = document.querySelector('.card-text');
 const closingMessage = document.getElementById('closingMessage');
 
 // Texto original fijo para evitar que se duplique al abrir y cerrar
-const originalMessage = "Las flores reales son hermosas, pero se marchitan. Por eso quise darte estas flores digitales, porque al igual que lo que siento por ti, están hechas para durar toda la vida.";
+const originalMessage = "Las flores reales son hermosas, pero se marchitan. Por eso quise darte estas flores, porque al igual que lo que siento por ti, están hechas para durar toda la vida.";
 
 if (btnAbreme && modalOverlay && closeBtn) {
     
