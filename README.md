@@ -19,7 +19,8 @@ No hace falta tocar código.
 
 1. Abre la página con `?editar` al final de la dirección, por ejemplo
    `https://TU-USUARIO.github.io/Juli_P/?editar`
-2. Cambia nombre, color de las flores, frases, mensaje, firma, foto y despedida.
+2. Cambia nombre, color de las flores, tipo de letra (seis juegos), frases, mensaje,
+   firma, foto y despedida.
    Todo se ve al instante. Escribe `{nombre}` en cualquier texto y se reemplaza por el nombre.
 3. Pulsa **Copiar enlace** y envíaselo. Esa persona ve la página final, sin editor.
 

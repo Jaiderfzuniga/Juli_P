@@ -41,8 +41,14 @@
   linkOut.addEventListener('focus', function () { linkOut.select(); });
   var status = el('p', { class: 'editor__status', role: 'status', 'aria-live': 'polite' });
 
+  /* Las muestras de letra escriben el nombre de quien lo recibe. */
+  function refreshSamples() {
+    Array.prototype.forEach.call(panel.querySelectorAll('[data-sample]'), function (n) { n.textContent = cfg.para || 'Nombre'; });
+  }
+
   function commit() {
     cfg = Object.assign({}, Gift.update(cfg));
+    refreshSamples();
     Gift.saveDraft(cfg);
     linkOut.value = Gift.shareUrl(cfg);
     status.textContent = '';
@@ -82,6 +88,33 @@
       return;
     }
 
+    if (f.type === 'fuente') {
+      wrap.appendChild(el('span', { class: 'editor__label', id: id + '-l', text: f.label }));
+      var grid = el('div', { class: 'editor__fonts', role: 'radiogroup', 'aria-labelledby': id + '-l' });
+      Object.keys(Gift.fonts).forEach(function (name) {
+        var ft = Gift.fonts[name];
+        Gift.loadFont(name);                       // para que cada muestra se vea con su letra
+        var title = el('span', { class: 'editor__font-name', text: ft.nombre });
+        title.style.fontFamily = ft.titulo;
+        title.style.fontWeight = ft.peso;
+        var sample = el('span', { class: 'editor__font-hand', 'data-sample': '' });
+        sample.style.fontFamily = ft.mano;
+        var b = el('button', {
+          type: 'button', class: 'editor__font', role: 'radio',
+          'aria-checked': String(cfg[f.key] === name), 'aria-label': ft.nombre,
+        }, [title, sample]);
+        b.addEventListener('click', function () {
+          cfg[f.key] = name;
+          Array.prototype.forEach.call(grid.children, function (c) { c.setAttribute('aria-checked', String(c === b)); });
+          commit();
+        });
+        grid.appendChild(b);
+      });
+      wrap.appendChild(grid);
+      target.appendChild(wrap);
+      return;
+    }
+
     var max = f.max || 200;
     var input = f.type === 'area'
       ? el('textarea', { id: id, rows: '5', maxlength: String(max) })
@@ -105,8 +138,8 @@
   /* ---------- Acciones ---------- */
   var copyBtn = el('button', { class: 'editor__btn editor__btn--main', type: 'button', text: 'Copiar enlace' });
   var viewBtn = el('button', { class: 'editor__btn', type: 'button', text: 'Vista previa', title: 'Abre el enlace tal como lo verá quien lo recibe' });
-  var replayBtn = el('button', { class: 'editor__btn', type: 'button', text: 'Repetir animación' });
-  var resetBtn = el('button', { class: 'editor__btn editor__btn--quiet', type: 'button', text: 'Restablecer textos' });
+  var replayBtn = el('button', { class: 'editor__btn', type: 'button', text: 'Repetir', title: 'Recarga la página para ver la animación desde el principio' });
+  var resetBtn = el('button', { class: 'editor__btn editor__btn--quiet', type: 'button', text: 'Restablecer', title: 'Vuelve al contenido original y borra el borrador' });
 
   copyBtn.addEventListener('click', function () {
     var url = Gift.shareUrl(cfg);
@@ -146,4 +179,5 @@
   panel.appendChild(foot);
   document.documentElement.classList.add('has-editor');
   document.body.appendChild(panel);
+  refreshSamples();
 })();

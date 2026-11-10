@@ -50,6 +50,7 @@
     root.setProperty('--petal-deep', theme.deep);
     root.setProperty('--petal-hi', theme.hi);
     FX.setColors(theme);
+    Gift.applyFont(cfg.letra);
 
     Array.prototype.forEach.call(document.querySelectorAll('[data-t]'), function (n) {
       n.textContent = Gift.text(cfg, n.getAttribute('data-t'));
