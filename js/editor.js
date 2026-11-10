@@ -24,7 +24,7 @@
   var cfg = Object.assign({}, Gift.config);
 
   var panel = el('aside', { class: 'editor', 'aria-label': 'Editor de la página' });
-  var toggle = el('button', { class: 'editor__toggle', type: 'button', 'aria-expanded': 'true', text: 'Ocultar editor' });
+  var toggle = el('button', { class: 'editor__toggle', type: 'button', 'aria-expanded': 'true', text: 'Ocultar' });
   var head = el('header', { class: 'editor__head' }, [
     el('h2', { class: 'editor__title', text: 'Personalizar' }),
     toggle,
@@ -167,17 +167,29 @@
     status,
   ]);
 
-  toggle.addEventListener('click', function () {
-    var closed = panel.classList.toggle('is-closed');
-    toggle.textContent = closed ? 'Editar' : 'Ocultar editor';
+  /* Botón flotante para volver a abrir el editor. Va fuera del panel
+     (fijo a la pantalla) para que no se pierda al ocultarlo en el celular. */
+  var fab = el('button', { class: 'editor-fab', type: 'button', 'aria-label': 'Abrir el editor', hidden: '' });
+  fab.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>';
+  fab.appendChild(el('span', { text: 'Editar' }));
+
+  function setClosed(closed) {
+    panel.classList.toggle('is-closed', closed);
+    panel.setAttribute('aria-hidden', String(closed));
+    if ('inert' in panel) panel.inert = closed;
+    fab.hidden = !closed;
     toggle.setAttribute('aria-expanded', String(!closed));
     document.documentElement.classList.toggle('editor-closed', closed);
-  });
+    (closed ? fab : toggle).focus({ preventScroll: true });
+  }
+  toggle.addEventListener('click', function () { setClosed(true); });
+  fab.addEventListener('click', function () { setClosed(false); });
 
   panel.appendChild(head);
   panel.appendChild(body);
   panel.appendChild(foot);
   document.documentElement.classList.add('has-editor');
   document.body.appendChild(panel);
+  document.body.appendChild(fab);
   refreshSamples();
 })();
