@@ -62,3 +62,7 @@ página suaviza las animaciones; añade `?animar` a la dirección para ver la ve
 ## Publicar
 
 En GitHub: **Settings → Pages → Deploy from a branch → main / (root)**.
+
+Al publicar cambios en `css/` o `js/`, cambia el valor `?v=` en `index.html` (por ejemplo
+la fecha). Así los celulares bajan los archivos nuevos en vez de mezclarlos con los
+guardados, que GitHub Pages deja en caché unos 10 minutos.
