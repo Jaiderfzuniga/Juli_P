@@ -18,6 +18,7 @@ window.GIFT_DEFAULTS = {
   despedida: 'Te quiero, {nombre}',
   foto: 'https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=700',
   tema: 'amarillo',
+  letra: 'clasica',
 };
 
 /* Temas de color. `petal` es el color de la flor; el resto se deriva. */
@@ -30,11 +31,24 @@ window.GIFT_THEMES = {
   celeste:  { nombre: 'Celeste',  petal: '#8fd6ff', deep: '#3a9be0', hi: '#d1efff' },
 };
 
+/* Juegos de letra. `titulo` es la letra de las frases grandes y `mano`
+   la letra manuscrita (nombre, firma, despedida). `href` es lo que se
+   pide a Google Fonts; la clásica ya viene cargada en index.html. */
+window.GIFT_FONTS = {
+  clasica:   { nombre: 'Clásica',   titulo: "'Gloock', Georgia, serif",      peso: 400, mano: "'Homemade Apple', cursive", href: '' },
+  romantica: { nombre: 'Romántica', titulo: "'Bodoni Moda', Georgia, serif", peso: 500, mano: "'Great Vibes', cursive",    href: 'family=Bodoni+Moda:wght@500&family=Great+Vibes' },
+  elegante:  { nombre: 'Elegante',  titulo: "'Italiana', Georgia, serif",    peso: 400, mano: "'Parisienne', cursive",     href: 'family=Italiana&family=Parisienne' },
+  original:  { nombre: 'Original',  titulo: "'Yeseva One', Georgia, serif",  peso: 400, mano: "'Dancing Script', cursive", href: 'family=Yeseva+One&family=Dancing+Script:wght@500' },
+  moderna:   { nombre: 'Moderna',   titulo: "'Bricolage Grotesque', system-ui, sans-serif", peso: 600, mano: "'Caveat', cursive", href: 'family=Bricolage+Grotesque:opsz,wght@12..96,600&family=Caveat:wght@500' },
+  divertida: { nombre: 'Divertida', titulo: "'Fredoka', system-ui, sans-serif", peso: 600, mano: "'Pacifico', cursive",     href: 'family=Fredoka:wght@600&family=Pacifico' },
+};
+
 /* Campos que muestra el editor (en este orden). */
 window.GIFT_FIELDS = [
   { grupo: 'Destinatario' },
   { key: 'para', label: 'Nombre de quien lo recibe', max: 24 },
   { key: 'tema', label: 'Color de las flores', type: 'tema' },
+  { key: 'letra', label: 'Tipo de letra', type: 'fuente' },
 
   { grupo: 'Portada' },
   { key: 'titulo', label: 'Frase principal', max: 70 },

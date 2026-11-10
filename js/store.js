@@ -50,6 +50,7 @@
       if (typeof v !== 'string') return;
       v = v.slice(0, f.max || 200);
       if (f.type === 'tema') { if (!THEMES[v]) return; }
+      if (f.type === 'fuente') { if (!(window.GIFT_FONTS || {})[v]) return; }
       if (f.type === 'url') v = safeUrl(v);
       out[f.key] = v;
     });
@@ -103,6 +104,42 @@
     return String(cfg[key] || '').replace(/\{nombre\}/gi, cfg.para || '');
   }
 
+
+  /* ---------- Tipo de letra ---------- */
+  var FONTS = window.GIFT_FONTS || {};
+  var fontLinks = {};
+
+  /* Pide a Google Fonts el juego de letra (una sola vez por juego). */
+  function loadFont(id) {
+    var f = FONTS[id];
+    if (!f || !f.href) return Promise.resolve();
+    if (fontLinks[id]) return fontLinks[id];
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?' + f.href + '&display=swap';
+    fontLinks[id] = new Promise(function (done) { link.onload = done; link.onerror = done; });
+    document.head.appendChild(link);
+    return fontLinks[id];
+  }
+
+  /* Pone la letra en la página y avisa cuando ya está lista para dibujar. */
+  function applyFont(id) {
+    var f = FONTS[id] || FONTS[DEFAULTS.letra];
+    if (!f) return Promise.resolve(null);
+    var root = document.documentElement.style;
+    root.setProperty('--font-display', f.titulo);
+    root.setProperty('--font-hand', f.mano);
+    root.setProperty('--font-script', f.mano);
+    root.setProperty('--wd', String(f.peso));
+    return loadFont(id).then(function () {
+      if (!document.fonts || !document.fonts.load) return f;
+      return Promise.all([
+        document.fonts.load(f.peso + ' 40px ' + f.titulo),
+        document.fonts.load('400 40px ' + f.mano),
+      ]).then(function () { return f; }, function () { return f; });
+    });
+  }
+
   var editing = /[?&]editar\b/.test(location.search);
 
   /* Si el dispositivo pide "reducir movimiento" se suavizan los efectos.
@@ -120,6 +157,9 @@
     reduce: reduce,
     defaults: DEFAULTS,
     themes: THEMES,
+    fonts: FONTS,
+    loadFont: loadFont,
+    applyFont: applyFont,
     fields: window.GIFT_FIELDS || [],
     merge: merge,
     sanitize: sanitize,
